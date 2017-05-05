@@ -1,0 +1,322 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>SequenceRunner Samples</title>
+
+  <style>
+    body {
+      font: 1em helvetica, arial, sans-serif
+    }
+
+    .sample {
+      border-bottom: 1px solid #ccc;
+      margin: 2px 0;
+      padding: 8px;
+      background-color: #eee;
+    }
+
+    h2 {
+      display: inline-block;
+      margin: 0 20px 0 0;
+      font-size: 1em;
+      background-color: #333;
+      color: #fff;
+      padding: 17px;
+      min-width: 200px;
+      cursor: pointer;
+    }
+
+    pre {
+      overflow: auto;
+    }
+
+    code {
+      font-size: 1.15em;
+    }
+
+    .progress {
+      width: 90px;
+      display: inline-block;
+    }
+
+    .letters {
+      padding: 5px;
+    }
+
+    .sprite {
+      display: inline-block;
+      vertical-align: top;
+      transform: scale(0.7);
+      border-bottom: 5px solid #ccc;
+      filter: saturate(0);
+    }
+
+  </style>
+</head>
+
+<body>
+  <h1>Samples</h1>
+
+  <script src="../src/SequenceRunner.js"></script>
+
+  <script>
+    function makeHTMLContainer(title, tag, className, prepend = "", append = "") {
+      let div = document.createElement("div"),
+          h2 = document.createElement("h2"),
+          el = document.createElement(tag),
+          pre = document.createElement("pre");
+
+      div.className = "sample";
+
+      h2.className = "title-" + className;
+      h2.innerHTML = title;
+
+      el.className = className;
+
+      pre.style.display = "none";
+
+      div.append(h2);
+      div.innerHTML += prepend;
+      div.append(el);
+      div.innerHTML += append;
+      div.append(pre);
+
+      document.body.append(div);
+
+      document.querySelector(`.title-${className}`).addEventListener("click", () => {
+        pre.style.display = (pre.style.display === "none" ? "block" : "none");
+      });
+    }
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("Loading ellipsis (default)", "span", "load-sequence", "Loading");
+
+    new SequenceRunner().start();
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("Loading more ellipses", "span", "more-ellipses", "Loading");
+
+    new SequenceRunner({
+      selector: ".more-ellipses",
+      duplicate: 10
+    }).start();
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("Loading dots", "span", "bullets", "LOAD");
+
+    new SequenceRunner({
+      selector: ".bullets",
+      content: " &bull;",
+    }).start();
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("Loading CLI style", "code", "progress", "[", "] <code id='perc'>10%</code>");
+
+    let perc = document.querySelector("#perc"),
+        progressSeq = new SequenceRunner({
+          selector: ".progress",
+          content: "=",
+          duplicate: 10,
+          delay: 1000
+        }).start().onChange((content, count) => {
+          perc.innerHTML = (count + 1) + "0%";
+
+          if (count === progressSeq.settings.duplicate - 1) {
+            progressSeq.pause();
+          }
+        });
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("Loading CLI style", "code", "spinner");
+
+    new SequenceRunner({
+      selector: ".spinner",
+      content: ["|", "/", "–", "\\"],
+      delay: 100
+    }).start();
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("Typewriter", "span", "typewriter");
+
+    let words = " typewriter effect in action";
+
+    new SequenceRunner({
+      selector: ".typewriter",
+      content: words.split("").map((el, i) => words.substr(0, i) + el),
+      delay: 100
+    }).start();
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("Loading words", "span", "words");
+
+    new SequenceRunner({
+      selector: ".words",
+      content: [
+        "<spam style='opacity: 0.2'>Some</span>",
+        "<spam style='opacity: 0.5'>Some content</span>",
+        "<spam style='opacity: 0.7'>Some content is</span>",
+        "Some content is loading"
+      ],
+      delay: 600
+    }).start();
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("One at a time", "span", "letters");
+
+    new SequenceRunner({
+      selector: ".letters",
+      content: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+      delay: 1000
+    }).start().onChange((content, count) => {
+      let el = document.querySelector(".letters");
+
+      if (count % 2 == 1) {
+        el.style.backgroundColor = "#666";
+        el.style.color = "#fff";
+      } else {
+        el.style.backgroundColor = "transparent";
+        el.style.color = "inherit";
+      }
+    });
+
+
+    //sample ------------------------------------------------------------------------------------
+    makeHTMLContainer("Sprite animation", "div", "sprite");
+
+    let frames = 7,
+        at = 0,
+        img = "https://s-media-cache-ak0.pinimg.com/originals/65/17/a7/6517a749c666bb0a788b0452d00e514a.png";
+
+    new SequenceRunner({
+      selector: ".sprite",
+      duplicate: 1,
+      delay: 90,
+      content: `<div id="sprite" style="background-image: url(${img}); height: 95px; width: 60px"></div>`
+    }).start().onChange(() => {
+      if (at >=frames) {
+        at = 0;
+      }
+
+      document.querySelector("#sprite").style.backgroundPosition = `-${60 * at}px 0`;
+      at++;
+    });
+
+
+    //show code =================================================================================
+
+    document.querySelector(".load-sequence + pre").innerHTML = `
+      new SequenceRunner().start();
+    `;
+
+    document.querySelector(".more-ellipses + pre").innerHTML = `
+      new SequenceRunner({
+        selector: ".more-ellipses",
+        duplicate: 10
+      }).start();
+    `;
+
+    document.querySelector(".bullets + pre").innerHTML = `
+      new SequenceRunner({
+        selector: ".bullets",
+        content: " &amp;bull;",
+      }).start();
+    `;
+
+    document.querySelector(".progress ~ pre").innerHTML = `
+      let perc = document.querySelector("#perc"),
+          progressSeq = new SequenceRunner({
+            selector: ".progress",
+            content: "=",
+            duplicate: 10,
+            delay: 1000
+          }).start().onChange((content, count) => {
+            perc.innerHTML = (count + 1) + "0%";
+
+            if (count === progressSeq.settings.duplicate - 1) {
+              progressSeq.pause();
+            }
+          });
+    `;
+
+    document.querySelector(".spinner + pre").innerHTML = `
+      new SequenceRunner({
+        selector: ".spinner",
+        content: ["|", "/", "–", "\\"],
+        delay: 100
+      }).start();
+    `;
+
+    document.querySelector(".typewriter + pre").innerHTML = `
+      let words = " typewriter effect in action";
+
+      new SequenceRunner({
+        selector: ".typewriter",
+        content: words.split("").map((el, i) => words.substr(0, i) + el),
+        delay: 100
+      }).start();
+    `;
+
+    document.querySelector(".words + pre").innerHTML = `
+      new SequenceRunner({
+        selector: ".words2",
+        content: [
+          "&lt;spam style='opacity: 0.2'>Some&lt;/span>",
+          "&lt;spam style='opacity: 0.5'>Some content&lt;/span>",
+          "&lt;spam style='opacity: 0.7'>Some content is&lt;/span>",
+          "Some content is loading"
+        ],
+        delay: 600
+      }).start();
+    `;
+
+    document.querySelector(".letters + pre").innerHTML = `
+      new SequenceRunner({
+        selector: ".letters",
+        content: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+        delay: 1000
+      }).start().onChange((content, count) => {
+        let el = document.querySelector(".letters");
+
+        if (count % 2 == 1) {
+          el.style.backgroundColor = "#666";
+          el.style.color = "#fff";
+        } else {
+          el.style.backgroundColor = "transparent";
+          el.style.color = "inherit";
+        }
+      });
+    `;
+
+    document.querySelector(".sprite + pre").innerHTML = `
+      let frames = 7,
+          at = 0,
+          img = "https://s-media-cache-ak0.pinimg.com/originals/65/17/a7/6517a749c666bb0a788b0452d00e514a.png";
+
+      new SequenceRunner({
+        selector: ".sprite",
+        duplicate: 1,
+        delay: 90,
+        content: \`&lt;div id="sprite" style="background-image: url($\{img}); height: 95px; width: 60px">&lt;/div>\`
+      }).start().onChange(() => {
+        if (at >=frames) {
+          at = 0;
+        }
+
+        document.querySelector("#sprite").style.backgroundPosition = \`-$\{60 * at}px 0\`;
+        at++;
+      })
+    `;
+
+  </script>
+
+</body>
+</html>
