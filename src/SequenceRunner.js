@@ -22,6 +22,8 @@ class SequenceRunner {
    *                                                               the length of the array.
    * @param  {Number}       [settings.duplicate=3]                 The number of times to duplicate your content.
    * @param  {Number}       [settings.delay=500]                   The delay between changes.
+   * @param  {Number}       [settings.loop=null]                   The amount of times to loop between changes. If set to 'null,' the loop will
+   *                                                               be infinite.
    * @returns {SequenceRunner}
    */
   constructor(settings) {
@@ -29,7 +31,8 @@ class SequenceRunner {
       selector: ".sequence-runner",
       content: ".",
       duplicate: 3,
-      delay: 500
+      delay: 500,
+      loop: null
     };
 
     for (let key in settings) {
@@ -70,6 +73,7 @@ class SequenceRunner {
   start() {
     this._currContent = "";
     this._count = 0;
+    this._loop = 0;
 
     this.stop();
     this._onInterate();
@@ -97,7 +101,21 @@ class SequenceRunner {
     this._elements.forEach(el => el.innerHTML = this._currContent);
 
     if (this._onChangeFn) {
-      this._onChangeFn(this._currContent, this._count);
+      this._onChangeFn(this._currContent, this._count, this._loop);
+    }
+
+    if (this._settings.loop) {
+      if (this._count >= this._settings.duplicate - 1) {
+        this._loop++;
+      }
+
+      if(this._loop >= this._settings.loop) {
+        this.pause();
+
+        if (this._onCompleteFn) {
+          this._onCompleteFn(this._currContent, this._count, this._loop);
+        }
+      }
     }
 
     this._count++;
@@ -140,6 +158,26 @@ class SequenceRunner {
    * @callback SequenceRunner~onChangeCallback
    * @param {*}      content The current content.
    * @param {Number} count   The current tick/count.
+   * @param {Number} loop    The current loop.
+   */
+
+  /**
+   * Calls your function at the end of the loop (assuming you set a loop).
+   * @param   {SequenceRunner~onCompleteCallback} callback The callback function.
+   * @returns {SequenceRunner}
+   */
+  onComplete(callback) {
+    this._onCompleteFn = callback;
+
+    return this;
+  }
+
+  /**
+   * The callback used by the 'onComplete' method.
+   * @callback SequenceRunner~onCompleteCallback
+   * @param {*}      content The current content.
+   * @param {Number} count   The current tick/count.
+   * @param {Number} loop    The current loop.
    */
 
 }

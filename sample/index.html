@@ -64,7 +64,7 @@
 
   <script>
     /* global SequenceRunner */
-  //jshint esversion: 6, browser: true
+    //jshint esversion: 6, browser: true
 
     function makeHTMLContainer(title, tag, className, prepend = "", append = "") {
       let div = document.createElement("div"),
@@ -127,15 +127,12 @@
           selector: ".progress",
           content: "=",
           duplicate: 10,
-          delay: 1000
+          delay: 1000,
+          loop: 1
         });
 
     progressSeq.onChange((content, count) => {
       perc.innerHTML = (count + 1) + "0%";
-
-      if (count === progressSeq.settings.duplicate - 1) {
-        progressSeq.pause();
-      }
     }).start();
 
 
@@ -208,8 +205,8 @@
       duplicate: 1,
       delay: 90,
       content: `<div id="sprite" style="background-image: url(${img}); height: 95px; width: 60px"></div>`
-    }).start().onChange(() => {
-      if (at >= keyframes) {
+    }).start().onChange((content, count, loop) => {
+      if (loop % keyframes == 1) {
         at = 0;
       }
 
@@ -243,15 +240,12 @@
             selector: ".progress",
             content: "=",
             duplicate: 10,
-            delay: 1000
+            delay: 1000,
+            loop: 1
           });
 
       progressSeq.onChange((content, count) => {
         perc.innerHTML = (count + 1) + "0%";
-
-        if (count === progressSeq.settings.duplicate - 1) {
-          progressSeq.pause();
-        }
       }).start();
     `;
 
@@ -315,11 +309,11 @@
         delay: 90,
         content: \`&lt;div id="sprite" style="background-image: url($\{img}); height: 95px; width: 60px">&lt;/div>\`
       }).start().onChange(() => {
-        if (at >= keyframes) {
+        if (loop % keyframes == 1) {
           at = 0;
         }
 
-        document.querySelector("#sprite").style.backgroundPosition = \`-$\{60 * at}px 0\`;
+        document.querySelector("#sprite").style.backgroundPosition = \`-\${60 * at}px 0\`;
         at++;
       });
     `;
