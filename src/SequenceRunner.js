@@ -11,12 +11,25 @@
 
 class SequenceRunner {
 
+  /**
+   * Creates a new SequenceRunner instance.
+   * @throws {Error} Throws if you attempt to define a setting that does not exist.
+   * @param  {Object}       [settings]                             The sequence settings.
+   * @param  {String}       [settings.selector=".sequence-runner"] The HTML container to write your content to. It can be an id, class, tag, etc.
+   * @param  {String|Array} [settings.content="."]                 The content to add to your selected HTML container(s). If set to a string, the
+   *                                                               content will be duplicated based on the amount set in the 'duplicate' settings
+   *                                                               property. If set to an array, the duplicate property will be auto set based on
+   *                                                               the length of the array.
+   * @param  {Number}       [settings.duplicate=3]                 The number of times to duplicate your content.
+   * @param  {Number}       [settings.delay=500]                   The delay between changes.
+   * @returns {SequenceRunner}
+   */
   constructor(settings) {
     let defaults = {
+      selector: ".sequence-runner",
       content: ".",
       duplicate: 3,
-      delay: 500,
-      selector: ".load-sequence"
+      delay: 500
     };
 
     for (let key in settings) {
@@ -42,10 +55,18 @@ class SequenceRunner {
     return this;
   }
 
+  /**
+   * Gets the current settings.
+   * @type {Object}
+   */
   get settings() {
     return this._settings;
   }
 
+  /**
+   * Starts the sequence.
+   * @returns {SequenceRunner}
+   */
   start() {
     this._currContent = "";
     this._count = 0;
@@ -82,12 +103,20 @@ class SequenceRunner {
     this._count++;
   }
 
+  /**
+   * Pauses the sequence. This method clears the interval, but does not empty the HTML container(s).
+   * @returns {SequenceRunner}
+   */
   pause() {
     clearInterval(this._intr);
 
     return this;
   }
 
+  /**
+   * Stops the sequence. This method clears the interval and empties the HTML container(s).
+   * @returns {SequenceRunner}
+   */
   stop() {
     clearInterval(this._intr);
     this._elements.forEach(el => el.innerHTML = "");
@@ -95,11 +124,23 @@ class SequenceRunner {
     return this;
   }
 
+  /**
+   * Calls your function on every change.
+   * @param   {SequenceRunner~onChangeCallback} callback The callback function.
+   * @returns {SequenceRunner}
+   */
   onChange(callback) {
     this._onChangeFn = callback;
 
     return this;
   }
+
+  /**
+   * The callback used by the 'onChange' method.
+   * @callback SequenceRunner~onChangeCallback
+   * @param {*}      content The current content.
+   * @param {Number} count   The current tick/count.
+   */
 
 }
 
