@@ -3,8 +3,7 @@
  * @copyright 2017 Leandro Silva (http://grafluxe.com)
  * @license MIT
  *
- * @classdesc
- * TDB...
+ * @classdesc Create unique loading text, HTML sequences, and even sprite animations.
 */
 
 //jshint esversion: 6, node: true, browser: true

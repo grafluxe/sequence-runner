@@ -1,0 +1,40 @@
+{
+  "name": "sequence-runner",
+  "description": "Create unique loading text, HTML sequences, and even sprite animations.",
+  "main": "dist/SequenceRunner.js",
+  "scripts": {
+    "prepare": "npm run dist -s",
+    "dist": "npm run lint -s && npm run babel -s && npm run minify -s",
+    "lint": "jshint src/",
+    "babel": "babel src/ -o dist/SequenceRunner.js",
+    "minify": "uglifyjs dist/SequenceRunner.js -mco dist/SequenceRunner.min.js --preamble \"/*github.com/Grafluxe/sequence-runner*/\"",
+    "doc": "jsdoc -c .jsdocrc"
+  },
+  "author": "Leandro Silva (http://grafluxe.com)",
+  "homepage": "https://github.com/Grafluxe/sequence-runner",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": "Grafluxe/sequence-runner.git",
+  "keywords": [
+    "loading",
+    "loading text",
+    "custom loader",
+    "ellipsis",
+    "text animation",
+    "loading animation",
+    "animation",
+    "sprite animator",
+    "sequence animator",
+    "custom frame sequencer",
+    "sequence runnner",
+    "keyframe runnner"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "boxy-jsdoc-template": "^1.0.1",
+    "jsdoc": "^3.4.3",
+    "jshint": "^2.9.4",
+    "uglify-js": "^2.7.5"
+  }
+}
