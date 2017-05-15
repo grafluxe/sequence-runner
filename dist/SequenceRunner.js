@@ -29,7 +29,7 @@ var SequenceRunner = function () {
    *                                                               the length of the array.
    * @param  {Number}       [settings.duplicate=3]                 The number of times to duplicate your content.
    * @param  {Number}       [settings.delay=500]                   The delay between changes.
-   * @param  {Number}       [settings.loop=null]                   The amount of times to loop between changes. If set to 'null,' the loop will
+   * @param  {Number}       [settings.loop=NaN]                    The amount of times to loop between changes. If set to 'NaN,' the loop will
    *                                                               be infinite.
    * @returns {SequenceRunner}
    */
@@ -41,7 +41,7 @@ var SequenceRunner = function () {
       content: ".",
       duplicate: 3,
       delay: 500,
-      loop: null
+      loop: NaN
     };
 
     for (var key in settings) {
