@@ -4,10 +4,11 @@
   "main": "dist/SequenceRunner.js",
   "scripts": {
     "prepare": "npm run dist -s",
-    "dist": "npm run lint -s && npm run babel -s && npm run minify -s",
+    "dist": "npm run lint -s && npm run babel -s && npm run minify -s && npm run preamble -s",
     "lint": "jshint src/",
     "babel": "babel src/ -o dist/SequenceRunner.js",
-    "minify": "uglifyjs dist/SequenceRunner.js -mco dist/SequenceRunner.min.js --preamble \"/*github.com/Grafluxe/sequence-runner*/\"",
+    "minify": "uglifyjs dist/SequenceRunner.js -mco dist/SequenceRunner.min.js",
+    "preamble": "preamble -p \"/*github.com/Grafluxe/sequence-runner*/\n\" -o dist/SequenceRunner.min.js",
     "doc": "jsdoc -c .jsdocrc"
   },
   "author": "Leandro Silva (http://grafluxe.com)",
@@ -35,6 +36,7 @@
     "boxy-jsdoc-template": "^1.0.1",
     "jsdoc": "^3.4.3",
     "jshint": "^2.9.4",
-    "uglify-js": "^2.7.5"
+    "preamble-cli": "^1.0.0",
+    "uglify-js": "^3.0.11"
   }
 }
