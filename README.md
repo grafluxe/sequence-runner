@@ -51,7 +51,9 @@ Script tag:
 
 ## Samples
 
-Most simple use case: Animating an ellipsis. The below logic will use all the defaults to create a most basic loading text sequence.
+Most simple use case: Animating an ellipsis. The below logic will use all the default settings to create a most basic loading text sequence.
+
+`<span class="sequence-runner"></span>`
 
 ```
 new SequenceRunner().start();
@@ -75,15 +77,19 @@ console.log(new SequenceRunner().settings);
 
 Animate custom text, duplicate it 10 times, and loop through it twice.
 
+`<span class="sequence-runner"></span>`
+
 ```
 new SequenceRunner({
   content: "hello.",
-  duplicate: 10,
+  duplicate: 5,
   loop: 2
 }).start();
 ```
 
 Run through a sequence of **different** content.
+
+`<p class="sequence-runner"></p>`
 
 ```
 new SequenceRunner({
@@ -97,6 +103,8 @@ new SequenceRunner({
 ```
 
 Some dummy content with *change* and *complete* listeners.
+
+`<span id="dummy-container"></span>`
 
 ```
 let seq = new SequenceRunner({
@@ -121,16 +129,19 @@ seq.start();
 
 Animate a sprite.
 
+`<div id="wrapper"></div>`
+
 ```
 let keyframes = 7,
     at = 0,
     img = "https://s-media-cache-ak0.pinimg.com/originals/65/17/a7/6517a749c666bb0a788b0452d00e514a.png";
 
 new SequenceRunner({
+  selector: "#wrapper",
   duplicate: 1,
   delay: 90,
   content: `<div id="sprite" style="background-image: url(${img}); height: 95px; width: 60px"></div>`
-}).start().onChange(() => {
+}).start().onChange((content, count, loop) => {
   if (loop % keyframes == 1) {
     at = 0;
   }
