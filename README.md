@@ -47,7 +47,7 @@ Script tag:
 ## Notes
 
 - The source code is written in ES6 and transpiled with Babel.
-- If you need to create documentation for local use, run `npm run doc`. Otherwise, visit the online [docs](http://grafluxe.com/doc/js/sequence-runner/SequenceRunner.html).
+- If you need to create documentation for local use, run `npm run doc`. Otherwise, visit the online [docs](http://grafluxe.com/o/doc/sequence-runner/SequenceRunner.html).
 
 ## Samples
 
